@@ -5,6 +5,9 @@ import { ArrowLeft, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MetricsCards } from "@/components/dashboard/metrics-cards";
+import { CommitChart } from "@/components/dashboard/commit-chart";
+import { LanguageChart } from "@/components/dashboard/language-chart";
+import { IssuesChart } from "@/components/dashboard/issues-chart";
 import {
   fetchRepoDetails,
   fetchRepoLanguages,
@@ -85,6 +88,20 @@ export default async function RepoPage({ params }: RepoPageProps) {
         openPRs={openPRs}
         closedPRs={closedPRs}
         topLanguage={topLanguage}
+      />
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        {Array.isArray(commitActivity) && commitActivity.length > 0 && (
+          <CommitChart data={commitActivity} />
+        )}
+        {Object.keys(languages).length > 0 && <LanguageChart data={languages} />}
+      </div>
+
+      <IssuesChart
+        openIssues={openIssues}
+        closedIssues={closedIssues}
+        openPRs={openPRs}
+        closedPRs={closedPRs}
       />
     </div>
   );
