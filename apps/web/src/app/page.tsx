@@ -1,8 +1,13 @@
 import Link from "next/link";
 import { GitBranch } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth();
+  if (session) redirect("/dashboard");
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-8 bg-background px-4">
       <div className="flex flex-col items-center gap-4 text-center">
@@ -16,7 +21,7 @@ export default function Home() {
         </p>
       </div>
       <Button asChild size="lg">
-        <Link href="/dashboard">Get Started</Link>
+        <Link href="/auth/signin">Get Started</Link>
       </Button>
     </div>
   );
