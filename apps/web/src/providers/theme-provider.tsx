@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useSyncExternalStore } from "react";
 
 type Theme = "light" | "dark" | "system";
 
@@ -11,28 +11,42 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("system");
+const STORAGE_KEY = "devscope-theme";
 
-  useEffect(() => {
-    const stored = localStorage.getItem("devscope-theme") as Theme | null;
-    if (stored) setTheme(stored);
+function getSnapshot(): Theme {
+  if (typeof window === "undefined") return "system";
+  return (localStorage.getItem(STORAGE_KEY) as Theme) ?? "system";
+}
+
+function getServerSnapshot(): Theme {
+  return "system";
+}
+
+function subscribe(callback: () => void) {
+  window.addEventListener("storage", callback);
+  return () => window.removeEventListener("storage", callback);
+}
+
+function applyTheme(t: Theme) {
+  const root = document.documentElement;
+  if (t === "system") {
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    root.classList.toggle("dark", prefersDark);
+  } else {
+    root.classList.toggle("dark", t === "dark");
+  }
+}
+
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+
+  const setTheme = useCallback((newTheme: Theme) => {
+    localStorage.setItem(STORAGE_KEY, newTheme);
+    window.dispatchEvent(new StorageEvent("storage", { key: STORAGE_KEY }));
   }, []);
 
   useEffect(() => {
-    const root = document.documentElement;
-
-    const applyTheme = (t: Theme) => {
-      if (t === "system") {
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        root.classList.toggle("dark", prefersDark);
-      } else {
-        root.classList.toggle("dark", t === "dark");
-      }
-    };
-
     applyTheme(theme);
-    localStorage.setItem("devscope-theme", theme);
 
     if (theme === "system") {
       const mq = window.matchMedia("(prefers-color-scheme: dark)");
