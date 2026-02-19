@@ -18,18 +18,18 @@ interface RepoCardProps {
 
 export function RepoCard({ repo }: RepoCardProps) {
   return (
-    <Link href={`/dashboard/${repo.owner.login}/${repo.name}`}>
-      <Card className="transition-colors hover:border-primary/50">
-        <CardHeader className="pb-3">
+    <Link href={`/dashboard/${repo.owner.login}/${repo.name}`} className="flex">
+      <Card className="flex w-full flex-col transition-colors hover:border-primary/50">
+        <CardHeader className="flex-1 pb-3">
           <div className="flex items-start justify-between gap-2">
-            <CardTitle className="text-base leading-tight">{repo.name}</CardTitle>
+            <CardTitle className="truncate text-base leading-tight">{repo.name}</CardTitle>
             <Badge variant={repo.private ? "secondary" : "outline"} className="shrink-0 text-xs">
               {repo.private ? "Private" : "Public"}
             </Badge>
           </div>
-          {repo.description && (
-            <CardDescription className="line-clamp-2">{repo.description}</CardDescription>
-          )}
+          <CardDescription className="line-clamp-2 min-h-[2.5rem]">
+            {repo.description ?? "No description"}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
