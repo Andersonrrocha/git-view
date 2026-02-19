@@ -8,6 +8,7 @@ import { MetricsCards } from "@/components/dashboard/metrics-cards";
 import { CommitChart } from "@/components/dashboard/commit-chart";
 import { LanguageChart } from "@/components/dashboard/language-chart";
 import { IssuesChart } from "@/components/dashboard/issues-chart";
+import { ActivityHeatmap } from "@/components/dashboard/activity-heatmap";
 import {
   fetchRepoDetails,
   fetchRepoLanguages,
@@ -96,6 +97,10 @@ export default async function RepoPage({ params }: RepoPageProps) {
         )}
         {Object.keys(languages).length > 0 && <LanguageChart data={languages} />}
       </div>
+
+      {Array.isArray(commitActivity) && commitActivity.length > 0 && (
+        <ActivityHeatmap data={commitActivity} />
+      )}
 
       <IssuesChart
         openIssues={openIssues}
