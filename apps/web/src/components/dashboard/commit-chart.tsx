@@ -33,26 +33,27 @@ export function CommitChart({ data }: CommitChartProps) {
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
             <XAxis
               dataKey="date"
-              tick={{ fontSize: 12 }}
-              className="fill-muted-foreground"
+              tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+              stroke="var(--border)"
               interval="preserveStartEnd"
             />
-            <YAxis tick={{ fontSize: 12 }} className="fill-muted-foreground" />
+            <YAxis tick={{ fontSize: 12, fill: "var(--muted-foreground)" }} stroke="var(--border)" />
             <Tooltip
               contentStyle={{
-                backgroundColor: "hsl(var(--card))",
-                border: "1px solid hsl(var(--border))",
+                backgroundColor: "var(--card)",
+                border: "1px solid var(--border)",
                 borderRadius: "var(--radius)",
-                color: "hsl(var(--card-foreground))",
+                color: "var(--card-foreground)",
               }}
+              labelStyle={{ color: "var(--card-foreground)" }}
             />
             <Line
               type="monotone"
               dataKey="commits"
-              stroke="hsl(var(--chart-1))"
+              stroke="var(--chart-1)"
               strokeWidth={2}
               dot={false}
               activeDot={{ r: 4 }}

@@ -33,20 +33,32 @@ export function IssuesChart({ openIssues, closedIssues, openPRs, closedPRs }: Is
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-            <XAxis dataKey="name" tick={{ fontSize: 12 }} className="fill-muted-foreground" />
-            <YAxis tick={{ fontSize: 12 }} className="fill-muted-foreground" />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+            <XAxis
+              dataKey="name"
+              tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+              stroke="var(--border)"
+            />
+            <YAxis
+              tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+              stroke="var(--border)"
+            />
             <Tooltip
               contentStyle={{
-                backgroundColor: "hsl(var(--card))",
-                border: "1px solid hsl(var(--border))",
+                backgroundColor: "var(--card)",
+                border: "1px solid var(--border)",
                 borderRadius: "var(--radius)",
-                color: "hsl(var(--card-foreground))",
+                color: "var(--card-foreground)",
               }}
+              labelStyle={{ color: "var(--card-foreground)" }}
+              itemStyle={{ color: "var(--card-foreground)" }}
             />
-            <Legend />
-            <Bar dataKey="open" fill="hsl(var(--chart-1))" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="closed" fill="hsl(var(--chart-2))" radius={[4, 4, 0, 0]} />
+            <Legend
+              wrapperStyle={{ color: "var(--foreground)" }}
+              formatter={(value) => <span style={{ color: "var(--foreground)" }}>{value}</span>}
+            />
+            <Bar dataKey="open" fill="var(--chart-1)" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="closed" fill="var(--chart-2)" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

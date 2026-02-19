@@ -6,11 +6,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { LanguageBreakdown } from "@/types/github";
 
 const CHART_COLORS = [
-  "hsl(var(--chart-1))",
-  "hsl(var(--chart-2))",
-  "hsl(var(--chart-3))",
-  "hsl(var(--chart-4))",
-  "hsl(var(--chart-5))",
+  "var(--chart-1)",
+  "var(--chart-2)",
+  "var(--chart-3)",
+  "var(--chart-4)",
+  "var(--chart-5)",
 ];
 
 interface LanguageChartProps {
@@ -49,6 +49,7 @@ export function LanguageChart({ data }: LanguageChartProps) {
                 const entry = chartData.find((d) => d.name === props.name);
                 return entry ? `${entry.name} ${entry.pct}%` : "";
               }}
+              labelLine={{ stroke: "var(--muted-foreground)" }}
             >
               {chartData.map((_, index) => (
                 <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
@@ -57,13 +58,17 @@ export function LanguageChart({ data }: LanguageChartProps) {
             <Tooltip
               formatter={(value) => `${((Number(value) / totalBytes) * 100).toFixed(1)}%`}
               contentStyle={{
-                backgroundColor: "hsl(var(--card))",
-                border: "1px solid hsl(var(--border))",
+                backgroundColor: "var(--card)",
+                border: "1px solid var(--border)",
                 borderRadius: "var(--radius)",
-                color: "hsl(var(--card-foreground))",
+                color: "var(--card-foreground)",
               }}
+              itemStyle={{ color: "var(--card-foreground)" }}
             />
-            <Legend />
+            <Legend
+              wrapperStyle={{ color: "var(--foreground)" }}
+              formatter={(value) => <span style={{ color: "var(--foreground)" }}>{value}</span>}
+            />
           </PieChart>
         </ResponsiveContainer>
       </CardContent>
