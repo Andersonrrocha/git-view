@@ -10,6 +10,8 @@ import { LanguageChart } from "@/components/dashboard/language-chart";
 import { IssuesChart } from "@/components/dashboard/issues-chart";
 import { ActivityHeatmap } from "@/components/dashboard/activity-heatmap";
 import { ContributorRanking } from "@/components/dashboard/contributor-ranking";
+import { RepoInsights } from "@/components/dashboard/repo-insights";
+import { generateInsights } from "@/lib/insights";
 import {
   fetchRepoDetails,
   fetchRepoLanguages,
@@ -52,6 +54,13 @@ export default async function RepoPage({ params }: RepoPageProps) {
   const closedIssues = issues.filter((i) => i.state === "closed" && !i.pull_request).length;
   const openPRs = pullRequests.filter((pr) => pr.state === "open").length;
   const closedPRs = pullRequests.filter((pr) => pr.state === "closed").length;
+
+  const insights = generateInsights({
+    commitActivity: Array.isArray(commitActivity) ? commitActivity : [],
+    contributors,
+    issues,
+    pullRequests,
+  });
 
   return (
     <div className="space-y-6">
@@ -112,6 +121,8 @@ export default async function RepoPage({ params }: RepoPageProps) {
           closedPRs={closedPRs}
         />
       </div>
+
+      <RepoInsights insights={insights} />
     </div>
   );
 }
