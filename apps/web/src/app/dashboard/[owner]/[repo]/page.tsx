@@ -9,6 +9,7 @@ import { CommitChart } from "@/components/dashboard/commit-chart";
 import { LanguageChart } from "@/components/dashboard/language-chart";
 import { IssuesChart } from "@/components/dashboard/issues-chart";
 import { ActivityHeatmap } from "@/components/dashboard/activity-heatmap";
+import { ContributorRanking } from "@/components/dashboard/contributor-ranking";
 import {
   fetchRepoDetails,
   fetchRepoLanguages,
@@ -102,12 +103,15 @@ export default async function RepoPage({ params }: RepoPageProps) {
         <ActivityHeatmap data={commitActivity} />
       )}
 
-      <IssuesChart
-        openIssues={openIssues}
-        closedIssues={closedIssues}
-        openPRs={openPRs}
-        closedPRs={closedPRs}
-      />
+      <div className="grid gap-4 lg:grid-cols-2">
+        {contributors.length > 0 && <ContributorRanking data={contributors} />}
+        <IssuesChart
+          openIssues={openIssues}
+          closedIssues={closedIssues}
+          openPRs={openPRs}
+          closedPRs={closedPRs}
+        />
+      </div>
     </div>
   );
 }
