@@ -9,7 +9,7 @@ import type {
 
 const GITHUB_API = "https://api.github.com";
 
-async function githubFetch<T>(path: string, token: string): Promise<T> {
+async function githubFetch<T>(path: string, token: string, retries = 0): Promise<T> {
   const res = await fetch(`${GITHUB_API}${path}`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -20,6 +20,13 @@ async function githubFetch<T>(path: string, token: string): Promise<T> {
 
   if (!res.ok) {
     throw new Error(`GitHub API error: ${res.status} ${res.statusText}`);
+  }
+
+  // GitHub returns 202 while computing stats for the first time.
+  // Retry a few times with a delay to wait for data to be ready.
+  if (res.status === 202 && retries < 3) {
+    await new Promise((r) => setTimeout(r, 1500));
+    return githubFetch<T>(path, token, retries + 1);
   }
 
   return res.json();
