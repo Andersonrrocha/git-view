@@ -58,12 +58,12 @@ export function LanguageChart({ data }: LanguageChartProps) {
             <Tooltip
               formatter={(value) => `${((Number(value) / totalBytes) * 100).toFixed(1)}%`}
               contentStyle={{
-                backgroundColor: "var(--card)",
+                backgroundColor: "var(--popover)",
                 border: "1px solid var(--border)",
                 borderRadius: "var(--radius)",
-                color: "var(--card-foreground)",
               }}
-              itemStyle={{ color: "var(--card-foreground)" }}
+              labelStyle={{ color: "var(--popover-foreground)" }}
+              itemStyle={{ color: "var(--popover-foreground)" }}
             />
             <Legend
               wrapperStyle={{ color: "var(--foreground)" }}

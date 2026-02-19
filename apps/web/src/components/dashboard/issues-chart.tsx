@@ -44,21 +44,21 @@ export function IssuesChart({ openIssues, closedIssues, openPRs, closedPRs }: Is
               stroke="var(--border)"
             />
             <Tooltip
+              cursor={{ fill: "var(--accent)", opacity: 0.5 }}
               contentStyle={{
-                backgroundColor: "var(--card)",
+                backgroundColor: "var(--popover)",
                 border: "1px solid var(--border)",
                 borderRadius: "var(--radius)",
-                color: "var(--card-foreground)",
               }}
-              labelStyle={{ color: "var(--card-foreground)" }}
-              itemStyle={{ color: "var(--card-foreground)" }}
+              labelStyle={{ color: "var(--popover-foreground)" }}
+              itemStyle={{ color: "var(--popover-foreground)" }}
             />
             <Legend
               wrapperStyle={{ color: "var(--foreground)" }}
               formatter={(value) => <span style={{ color: "var(--foreground)" }}>{value}</span>}
             />
-            <Bar dataKey="open" fill="var(--chart-1)" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="closed" fill="var(--chart-2)" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="open" fill="var(--chart-1)" radius={[4, 4, 0, 0]} name="Open" />
+            <Bar dataKey="closed" fill="var(--chart-2)" radius={[4, 4, 0, 0]} name="Closed" />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

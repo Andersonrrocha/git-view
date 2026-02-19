@@ -40,15 +40,19 @@ export function CommitChart({ data }: CommitChartProps) {
               stroke="var(--border)"
               interval="preserveStartEnd"
             />
-            <YAxis tick={{ fontSize: 12, fill: "var(--muted-foreground)" }} stroke="var(--border)" />
+            <YAxis
+              tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+              stroke="var(--border)"
+            />
             <Tooltip
+              cursor={{ stroke: "var(--muted-foreground)", strokeWidth: 1 }}
               contentStyle={{
-                backgroundColor: "var(--card)",
+                backgroundColor: "var(--popover)",
                 border: "1px solid var(--border)",
                 borderRadius: "var(--radius)",
-                color: "var(--card-foreground)",
               }}
-              labelStyle={{ color: "var(--card-foreground)" }}
+              labelStyle={{ color: "var(--popover-foreground)" }}
+              itemStyle={{ color: "var(--popover-foreground)" }}
             />
             <Line
               type="monotone"
