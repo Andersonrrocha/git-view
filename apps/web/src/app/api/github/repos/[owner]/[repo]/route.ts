@@ -32,12 +32,12 @@ export async function GET(_request: Request, { params }: RouteParams) {
       fetchPullRequests(token, owner, repo),
     ]);
 
-  return NextResponse.json({
-    details,
-    languages,
-    contributors,
-    commitActivity,
-    issues,
-    pullRequests,
-  });
+  return NextResponse.json(
+    { details, languages, contributors, commitActivity, issues, pullRequests },
+    {
+      headers: {
+        "Cache-Control": "no-store, max-age=0",
+      },
+    },
+  );
 }

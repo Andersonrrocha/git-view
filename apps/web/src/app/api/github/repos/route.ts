@@ -9,5 +9,9 @@ export async function GET() {
   }
 
   const repos = await fetchUserRepos(session.accessToken);
-  return NextResponse.json(repos);
+  return NextResponse.json(repos, {
+    headers: {
+      "Cache-Control": "no-store, max-age=0",
+    },
+  });
 }

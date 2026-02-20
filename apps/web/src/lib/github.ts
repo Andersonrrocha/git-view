@@ -17,7 +17,7 @@ const defaultHeaders = (token: string) => ({
 async function githubFetch<T>(path: string, token: string): Promise<T> {
   const res = await fetch(`${GITHUB_API}${path}`, {
     headers: defaultHeaders(token),
-    next: { revalidate: 300 },
+    next: { revalidate: 60 },
   });
 
   if (!res.ok) {
@@ -30,7 +30,7 @@ async function githubFetch<T>(path: string, token: string): Promise<T> {
 // Stats endpoints return 202 while GitHub computes data in the background.
 // We retry with no-cache to avoid persisting the empty response.
 async function githubFetchStats<T>(path: string, token: string): Promise<T> {
-  for (let attempt = 0; attempt < 4; attempt++) {
+  for (let attempt = 0; attempt < 6; attempt++) {
     const res = await fetch(`${GITHUB_API}${path}`, {
       headers: defaultHeaders(token),
       cache: "no-store",
@@ -44,7 +44,7 @@ async function githubFetchStats<T>(path: string, token: string): Promise<T> {
       return res.json();
     }
 
-    await new Promise((r) => setTimeout(r, 2000));
+    await new Promise((r) => setTimeout(r, 1500 * (attempt + 1)));
   }
 
   return [] as T;

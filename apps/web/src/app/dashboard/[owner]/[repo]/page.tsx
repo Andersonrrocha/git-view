@@ -21,6 +21,8 @@ import {
   fetchPullRequests,
 } from "@/lib/github";
 
+export const dynamic = "force-dynamic";
+
 interface RepoPageProps {
   params: Promise<{ owner: string; repo: string }>;
 }
