@@ -9,12 +9,14 @@ import type {
 
 const GITHUB_API = "https://api.github.com";
 
-async function githubFetch<T>(path: string, token: string, retries = 0): Promise<T> {
+const defaultHeaders = (token: string) => ({
+  Authorization: `Bearer ${token}`,
+  Accept: "application/vnd.github+json",
+});
+
+async function githubFetch<T>(path: string, token: string): Promise<T> {
   const res = await fetch(`${GITHUB_API}${path}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: "application/vnd.github+json",
-    },
+    headers: defaultHeaders(token),
     next: { revalidate: 300 },
   });
 
@@ -22,14 +24,30 @@ async function githubFetch<T>(path: string, token: string, retries = 0): Promise
     throw new Error(`GitHub API error: ${res.status} ${res.statusText}`);
   }
 
-  // GitHub returns 202 while computing stats for the first time.
-  // Retry a few times with a delay to wait for data to be ready.
-  if (res.status === 202 && retries < 3) {
-    await new Promise((r) => setTimeout(r, 1500));
-    return githubFetch<T>(path, token, retries + 1);
+  return res.json();
+}
+
+// Stats endpoints return 202 while GitHub computes data in the background.
+// We retry with no-cache to avoid persisting the empty response.
+async function githubFetchStats<T>(path: string, token: string): Promise<T> {
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const res = await fetch(`${GITHUB_API}${path}`, {
+      headers: defaultHeaders(token),
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      throw new Error(`GitHub API error: ${res.status} ${res.statusText}`);
+    }
+
+    if (res.status !== 202) {
+      return res.json();
+    }
+
+    await new Promise((r) => setTimeout(r, 2000));
   }
 
-  return res.json();
+  return [] as T;
 }
 
 export async function fetchUserRepos(token: string): Promise<Repository[]> {
@@ -57,7 +75,10 @@ export async function fetchRepoContributors(
   owner: string,
   repo: string,
 ): Promise<Contributor[]> {
-  return githubFetch<Contributor[]>(`/repos/${owner}/${repo}/contributors?per_page=100`, token);
+  return githubFetchStats<Contributor[]>(
+    `/repos/${owner}/${repo}/contributors?per_page=100`,
+    token,
+  );
 }
 
 export async function fetchCommitActivity(
@@ -65,7 +86,10 @@ export async function fetchCommitActivity(
   owner: string,
   repo: string,
 ): Promise<CommitActivity[]> {
-  return githubFetch<CommitActivity[]>(`/repos/${owner}/${repo}/stats/commit_activity`, token);
+  return githubFetchStats<CommitActivity[]>(
+    `/repos/${owner}/${repo}/stats/commit_activity`,
+    token,
+  );
 }
 
 export async function fetchIssues(token: string, owner: string, repo: string): Promise<Issue[]> {
