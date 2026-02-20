@@ -23,6 +23,7 @@ export default async function Home() {
       <Button asChild size="lg">
         <Link href="/auth/signin">Get Started</Link>
       </Button>
+      <p className="text-xs text-muted-foreground/50">v0.1.0</p>
     </div>
   );
 }
